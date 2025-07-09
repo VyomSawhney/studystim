@@ -107,7 +107,7 @@ export default function Home() {
             </div>
 
             <div className="space-y-6">
-              <h3 className="text-xl font-bold text-gray-900">What's Inside:</h3>
+              <h3 className="text-xl font-bold text-gray-900">What&apos;s Inside:</h3>
               <div className="grid grid-cols-2 gap-4">
                 {ingredients.map((ingredient, index) => (
                   <div key={index} className="bg-white p-4 rounded-xl shadow-sm border border-orange-100">
@@ -189,9 +189,9 @@ export default function Home() {
                 <div className="flex justify-center">
                   <CheckCircleIcon className="h-16 w-16 text-green-500" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900">You're on the list! 🎉</h3>
+                <h3 className="text-2xl font-bold text-gray-900">You&apos;re on the list! 🎉</h3>
                 <p className="text-gray-600">
-                  Thanks for joining our waitlist. We'll notify you as soon as StudyStim is available.
+                  Thanks for joining our waitlist. We&apos;ll notify you as soon as StudyStim is available.
                 </p>
               </div>
             )}
