@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { db } from '../../../../lib/firebase'
+import { collection, addDoc, query, where, getDocs } from 'firebase/firestore'
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,16 +16,27 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Here you would typically:
-    // 1. Save to database (MongoDB, PostgreSQL, etc.)
-    // 2. Send to email service (Mailchimp, ConvertKit, etc.)
-    // 3. Send confirmation email
-    
-    // For now, we'll just log it and return success
-    console.log('New waitlist signup:', email)
-    
-    // Simulate processing time
-    await new Promise(resolve => setTimeout(resolve, 500))
+    // Check if email already exists
+    const waitlistRef = collection(db, 'waitlist')
+    const emailQuery = query(waitlistRef, where('email', '==', email.toLowerCase()))
+    const existingEmails = await getDocs(emailQuery)
+
+    if (!existingEmails.empty) {
+      return NextResponse.json(
+        { error: 'Email already registered for waitlist' },
+        { status: 409 }
+      )
+    }
+
+    // Add email to Firestore
+    const docRef = await addDoc(waitlistRef, {
+      email: email.toLowerCase(),
+      timestamp: new Date(),
+      source: 'landing_page',
+      status: 'active'
+    })
+
+    console.log('New waitlist signup saved to Firestore:', email, 'Doc ID:', docRef.id)
 
     return NextResponse.json(
       { 
@@ -35,6 +48,17 @@ export async function POST(request: NextRequest) {
     
   } catch (error) {
     console.error('Waitlist signup error:', error)
+    
+    // More specific error handling
+    if (error instanceof Error) {
+      if (error.message.includes('Firebase')) {
+        return NextResponse.json(
+          { error: 'Database connection error. Please try again.' },
+          { status: 503 }
+        )
+      }
+    }
+    
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

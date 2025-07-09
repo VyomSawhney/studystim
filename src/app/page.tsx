@@ -223,7 +223,7 @@ export default function Home() {
               Brain Boost Drink - Unlock Your Mental Potential
             </p>
             <div className="flex justify-center space-x-6 text-sm text-gray-500">
-              <span>© 2024 StudyStim</span>
+              <span>© 2025 StudyStim</span>
               <span>•</span>
               <span>Privacy Policy</span>
               <span>•</span>
